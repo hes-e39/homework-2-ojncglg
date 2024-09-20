@@ -4,8 +4,9 @@
  * @param b - The second number.
  * @returns The sum of a and b as a number
  */
-export const addTwoNumbers = (a: number, b?: number): string => {
-  return a + b;
+export const addTwoNumbers = (a: number, b?: number): number => {
+  //if b is not provided, lets assume its 0
+  return a + (b ?? 0);
 };
 
 // /**
@@ -13,18 +14,26 @@ export const addTwoNumbers = (a: number, b?: number): string => {
 //  * @param values - An array of numbers or strings.
 //  * @returns The sum of the numbers.
 //  */
-export const sumArray = (numbers: (number | string)[]): string => {
-  return numbers.reduce((acc, curr) => acc + curr, 0);
+export const sumArray = (numbers: (number | string)[]): number => {
+  return numbers.reduce((acc: number, curr) => {
+    const numValue = typeof curr === 'string' ? parseFloat(curr) : curr;
+    return acc + (isNaN(numValue) ? 0 : numValue);
+  }, 0);
 };
 
 // Create type "Person" with the following properties:
 // - name: string
 // - age: number
-export type Person = boolean;
+export type Person = {
+  name: string;
+  age: number;
+}
 
 // Create type "User" which extends "Person" and adds the following properties:
 // - type: 'user' (literal type)
-export type User = boolean;
+export type User = Person & {
+  type: 'user';
+}
 
 // Create type "Admin" which extends "Person" and adds the following properties:
 // - isSuperAdmin: boolean
