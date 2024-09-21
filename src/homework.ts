@@ -33,20 +33,27 @@ export type Person = {
 // - type: 'user' (literal type)
 export type User = Person & {
   type: 'user';
-}
+};
 
 // Create type "Admin" which extends "Person" and adds the following properties:
 // - isSuperAdmin: boolean
-export type Admin = boolean;
+// is this person an admin? 
+export type Admin = Person & {
+  isSuperAdmin: boolean;
+};
 
 // Create a type "AllPeople" which is a union of "Person", "User", and "Admin"
 export type AllPeople = Person | User | Admin;
 
 // Add function "isAdmin" that returns true if "u" is an admin
-export const isAdmin = (u: AllPeople) => undefined;
+export const isAdmin = (u: AllPeople): u is Admin => {
+  return 'isSuperAdmin' in u;
+};
 
 // Add function "isUser" that returns true if "u" is a user
-export const isUser = (u: AllPeople) => undefined;
+export const isUser = (u: AllPeople): u is User => {
+  return 'type' in u && u.type === 'user';
+};
 
 /**
  * If a "Admin" calls userGreetingMessage, return "Hello, {name}. You are an admin."
@@ -55,6 +62,12 @@ export const isUser = (u: AllPeople) => undefined;
  * @param user - The user to greet
  * @returns A greeting message
  */
-export const userGreetingMessage = (u: AllPeople) => {
-  return "hello";
+export const userGreetingMessage = (u: AllPeople): string => {
+  if (isAdmin(u)) {
+    return `Hello, ${u.name}. You are an admin.`;
+  } else if (isUser(u)) {
+    return `Hello, ${u.name}. You are a user.`;
+  } else {
+    return `Hello, ${u.name}. You do not have access.`;
+  }
 };
